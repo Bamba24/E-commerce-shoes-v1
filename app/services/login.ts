@@ -1,4 +1,7 @@
 // services/authService.ts
+import { API_BASE_URL } from '@/config';
+
+
 export interface LoginPayload {
   email: string;
   password: string;
@@ -6,7 +9,7 @@ export interface LoginPayload {
 
 export const loginUser = async (data: LoginPayload) => {
   try {
-    const res = await fetch("/api/login", {
+    const res = await fetch(`${API_BASE_URL}/api/login`, {
       method: "POST",
       headers: {
         'Content-Type': "application/json"

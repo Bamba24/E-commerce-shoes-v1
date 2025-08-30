@@ -6,6 +6,8 @@ import slugify from 'slugify';
 import { toast } from 'mui-sonner';
 import { DevTool } from '@hookform/devtools';
 import type {FormValuesAjoutProduit} from "../../../types/index";
+import { API_BASE_URL } from '@/config';
+
 
 
 export default function AddProductForm() {
@@ -64,7 +66,7 @@ export default function AddProductForm() {
     };
 
     try {
-      const res = await fetch('/api/produits', {
+      const res = await fetch(`${API_BASE_URL}/api/produits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(produit),
