@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #3D3D3D;
+  --secondary-color: white;
+
+  --padding-section: 99px;
+  --margin-bottom-title: 36px;
+  --padding-x-section: 20px;
+
+  --police-primary: 45px;
+  --police-secondary: 36px;
+  --police-tertiary: 16px;
+
+  --font-titre: bold;
+
+  --police-title-card-primary: 22px;
+  --police-title-card-secondary: 14px;
+
+  --police-button: 20px;
+  --background-button-search: #2e2d2d;
+  --background-button: black;
+  --police-title-faq: 20px;
+  --police-text-faq: 16px;
+
+  --police-footer-text: 18px;
+
+}
+
+@media (max-width: 500px) {
+  .hide-under-500 {
+    display: none;
+  }
+}
+
+

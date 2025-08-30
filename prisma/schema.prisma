@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // ou postgresql/sqlite selon ton besoin
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+model Utilisateur {
+  id            String         @id @default(cuid())
+  nom           String
+  email         String         @unique
+  motDePasse    String
+  role          Role           @default(CLIENT)
+  commandes     Commande[]
+  notifications Notification[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Produit {
+  id                   String @id @default(cuid())
+  nom                  String
+  slug                 String @unique
+  description          String
+  prix                 Float
+  ancienPrix           Float?
+  remise               Int?
+  genre                String
+  categorie            String
+  marque               String
+  stock                Int
+  note                 Float?
+  nombreAvis           Int?
+  pointuresDisponibles String // CSV : "38,39,40"
+  couleursDisponibles  String // CSV : "Noir,Blanc"
+  images               String // URLs ou paths
+
+  articlesCommande ArticleCommande[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Commande {
+  id            String      @id @default(cuid())
+  utilisateurId String
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id])
+
+  total            Float
+  date             DateTime          @default(now())
+  articles         ArticleCommande[]
+  adresseLivraison String
+  ville            String
+  pays             String
+  codePostal       String
+
+  createdAt DateTime @default(now())
+}
+
+model ArticleCommande {
+  id         String @id @default(cuid())
+  commandeId String
+  produitId  String
+  quantite   Int
+  prix       Float // prix unitaire au moment de la commande
+
+  commande Commande @relation(fields: [commandeId], references: [id])
+  produit  Produit  @relation(fields: [produitId], references: [id])
+}
+
+model ResumeCommande {
+  id             String   @id @default(cuid())
+  idCommande     String
+  nomUtilisateur String
+  email          String
+  adresse        String
+  lieuLivraison  String
+  produit        String
+  quantite       Int
+  total          Float
+  date           DateTime
+  isRead         Boolean  @default(false)  // ✅ nouveau champ
+  createdAt      DateTime @default(now())
+}
+
+model Statistiques {
+  id                Int      @id @default(autoincrement())
+  totalUtilisateurs Int
+  totalCommandes    Int
+  totalProduits     Int
+  totalRevenus      Float
+  updatedAt         DateTime @updatedAt
+}
+
+model Notification {
+  id        String      @id @default(cuid())
+  message   String
+  userId    String
+  user      Utilisateur @relation(fields: [userId], references: [id])
+  isRead    Boolean     @default(false)
+  createdAt DateTime    @default(now())
+}
