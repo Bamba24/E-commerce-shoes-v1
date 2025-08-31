@@ -5,13 +5,10 @@ import Image from 'next/image';
 import { toast } from "mui-sonner";
 import { useForm } from 'react-hook-form';
 import {LoginFormValues} from  "../types/index";
-import {useAuth} from '../context/AuthContext';
 import { loginUser } from '../services/login';
 
 
 export default function LoginPage() {
-
-  const {login}= useAuth();
 
   const form = useForm<LoginFormValues>({
     defaultValues: {
@@ -27,7 +24,6 @@ export default function LoginPage() {
 
   try {
       const result = await loginUser(data);
-      login(result.user, result.token);
       toast.success(`Connexion réussie, Bienvenue ${result.user.nom}`);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
