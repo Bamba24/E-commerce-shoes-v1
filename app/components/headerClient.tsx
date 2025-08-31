@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import { jwtDecode } from 'jwt-decode';
-import { toast } from 'mui-sonner';
 import type { Produit, Notification } from '../types';
 import { useAuth } from '../context/AuthContext';
 
@@ -33,12 +32,6 @@ export default function HeaderClient() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    if (!token) {
-      toast.error("Vous n'êtes pas connecté");
-      router.push('/');
-      return;
-    }
-
     const checkAccess = async () => {
       try {
         const res = await fetch('/api/jwtoken', {
@@ -55,9 +48,11 @@ export default function HeaderClient() {
           return;
         }
 
-        const decoded: JwtPayload = jwtDecode(token);
-        if (decoded.role === 'CLIENT' && pathname.startsWith('/dashboard')) {
-          router.push('/');
+        if (token) {
+          const decoded: JwtPayload = jwtDecode(token);
+          if (decoded.role === 'CLIENT' && pathname.startsWith('/dashboard')) {
+            router.push('/');
+          }
         }
       } catch (error) {
         console.error('Erreur vérification token :', error);

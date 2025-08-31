@@ -26,12 +26,6 @@ export default function Headers() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    if (!token) {
-      toast.error("Vous n'êtes pas connecté");
-      route.push('/');
-      return;
-    }
-
     const checkAccess = async () => {
       try {
         const res = await fetch('/api/jwtoken', {
@@ -101,10 +95,10 @@ export default function Headers() {
         {!role && (
           <>
             <button>
-              <Link href="/login" className='text-white'>Connexion</Link>
+              <Link href="/signIn" className='text-white'>Connexion</Link>
             </button>
             <button>
-              <Link href="/register" className='text-white'>S&apos;enregistrer</Link>
+              <Link href="/signUp" className='text-white'>S&apos;enregistrer</Link>
             </button>
           </>
         )}
