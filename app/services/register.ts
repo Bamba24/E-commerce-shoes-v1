@@ -8,7 +8,7 @@ import { toast } from "mui-sonner";
 export const registerUser =  async (data: RegisterFormValues, router: ReturnType<typeof useRouter>)=> {
 
   try {
-      const res = await fetch(`/api/register`, {
+      const res = await fetch(`/api/auth/register`, {
          method: "POST",
          headers: {
            'Content-Type': "application/json"

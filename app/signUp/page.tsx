@@ -31,7 +31,7 @@ export default function RegisterPage() {
        const result = await registerUser(data, route);
        if (result) {
          toast.success("Incription reussi");
-         route.push('/login');
+         route.push('/signIn');
        } else {
          toast.error("Cet utilisateur existe deja");
        }
