@@ -1,9 +1,8 @@
 import { Notification } from "../types/index";
-import { API_BASE_URL } from '@/config';
 
 export const notificationUser = async (): Promise<Notification[] | undefined> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/notifications`);
+    const res = await fetch(`/api/notifications`);
     const all = await res.json();
 
     // 🔒 Filtrer ici via le token localStorage
@@ -16,7 +15,7 @@ export const notificationUser = async (): Promise<Notification[] | undefined> =>
     const filtered = all.filter((n: Notification) => n.userId === userIdFromToken);
 
     // Marquer comme lues
-    await fetch(`${API_BASE_URL}/api/notifications/mark-read`, {
+    await fetch(`/api/notifications/mark-read`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

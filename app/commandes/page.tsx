@@ -9,7 +9,6 @@ import type { Produit } from '../types';
 import { toast } from 'mui-sonner';
 import type {FormValues} from "../types/index";
 import type {JwtPayload} from "../types/index";
-import {API_BASE_URL} from "@/config"
 export default function CheckoutPage() {
 
   const router = useRouter();
@@ -114,7 +113,7 @@ export default function CheckoutPage() {
         total: total - remise,
       };
 
-      const res = await fetch(`${API_BASE_URL}/api/commande`, {
+      const res = await fetch(`/api/commande`, {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' },

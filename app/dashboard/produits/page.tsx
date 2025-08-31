@@ -5,7 +5,6 @@ import type { Produit } from "../../types/index";
 import {ProduitsUser} from '../services/produits';
 import Image from 'next/image';
 import { toast } from 'mui-sonner';
-import {API_BASE_URL} from "@/config"
 
 export default function ProductList() {
   const [produits, setProduits] = useState<Produit[]>([]);
@@ -33,7 +32,7 @@ export default function ProductList() {
     if (!confirm) return;
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/produits`, {
+      const res = await fetch(`/api/produits`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

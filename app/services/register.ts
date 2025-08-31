@@ -3,13 +3,12 @@
 import { RegisterFormValues } from "../types";
 import { useRouter } from 'next/navigation';
 import { toast } from "mui-sonner";
-import { API_BASE_URL } from '@/config';
 
 
 export const registerUser =  async (data: RegisterFormValues, router: ReturnType<typeof useRouter>)=> {
 
   try {
-      const res = await fetch(`${API_BASE_URL}/api/register`, {
+      const res = await fetch(`/api/register`, {
          method: "POST",
          headers: {
            'Content-Type': "application/json"
