@@ -5,26 +5,15 @@ import Link from 'next/link';
 import { toast } from 'mui-sonner';
 import type { Produit } from '@/app/types/index';
 import {ProduitsUser} from '@/app/services/produits';
-import { FaCircleChevronRight } from "react-icons/fa6";
-import { FaCircleChevronLeft } from "react-icons/fa6";
 
 import '../../globals.css';
 
 export default function ProductPage({ params }: {params: {slug: string}}) {
 
-  const [current, setCurrent] = useState(0)
   const [product, setProduct] = useState<Produit | null>(null);
   const [similarProducts, setSimilarProducts] = useState<Produit[]>([]);
   console.log('Slug param:', params.slug)
 
-
-  const prevSlides = ()=>{
-    setCurrent((prev)=> (prev === 0 ? similarProducts.length - 1 : prev - 1))
-  }
-
-  const nextSlides = ()=>{
-    setCurrent((prev)=> (prev ===  similarProducts.length - 1 ? 0  : prev + 1))
-  }
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -109,12 +98,12 @@ export default function ProductPage({ params }: {params: {slug: string}}) {
         <div className="col-span-12 md:col-span-5 flex flex-col gap-8 text-center">
           <div className="flex flex-col gap-2">
             <h2 className="[font-size:var(--police-secondary)] font-[var(--font-titre)]">{product.nom}</h2>
-            <p className="text-2xl font-semibold text-[var(--primary-color)]">{product.prix} €</p>
+            <p className="text-2xl font-semibold text-[var(--primary-color)]">{product.prix} Fcfa</p>
             <p className="text-sm text-gray-500">★ ★ ★ ★ ☆ ({product.nombreAvis ?? 32} avis)</p>
             <p className="text-gray-700 text-sm leading-relaxed">{product.description}</p>
           </div>
 
-          <ul className="list-disc list-inside text-sm text-gray-600 text-center">
+          <ul className="text-sm text-gray-600 text-center">
             <li>Livraison rapide</li>
             <li>Retour gratuit</li>
             <li>Disponible en plusieurs tailles et couleurs</li>
@@ -135,7 +124,7 @@ export default function ProductPage({ params }: {params: {slug: string}}) {
             </Link>
           </div>
 
-          <p className="text-xs text-gray-400 mt-2">Livraison offerte dès 50 € d&apos;achat</p>
+          <p className="text-xs text-gray-400 mt-2">Livraison offerte dès 20000 fcfa d&apos;achat</p>
         </div>
       </div>
 
@@ -144,7 +133,9 @@ export default function ProductPage({ params }: {params: {slug: string}}) {
       <div className="mt-12">
         <h3 className="[font-size:var(--police-secondary)] font-[var(--font-titre)] mb-6">Produits similaires</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {similarProducts.map((prod, idx) => {
+        {similarProducts
+        .slice(0, 4)
+        .map((prod, idx) => {
           const imgs = prod.images?.split(',') || [];
           return (
             <Link
@@ -155,7 +146,7 @@ export default function ProductPage({ params }: {params: {slug: string}}) {
               {/* Image avec effet zoom */}
               <div
                 className="h-80 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"
-                style={{ backgroundImage: `url('/${imgs[current]}')` }}
+                style={{ backgroundImage: `url('/${imgs[idx]}')` }}
               ></div>
 
               {/* Overlay dégradé */}
@@ -186,9 +177,6 @@ export default function ProductPage({ params }: {params: {slug: string}}) {
           );
         })}
       </div>
-
-              <FaCircleChevronRight onClick={nextSlides} />
-              <FaCircleChevronLeft onClick={prevSlides} />
       </div>
     </div>
   );

@@ -15,8 +15,10 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="grid grid-cols-4 p-6"> 
-    <DashboardClient />
-      {children}
+  return <div  className="flex justify-center gap-2"> 
+       <DashboardClient />
+      <main className="w-[95%]">
+        {children}
+      </main>
   </div>
 }

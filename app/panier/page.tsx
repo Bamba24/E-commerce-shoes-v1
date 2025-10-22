@@ -50,6 +50,8 @@ export default function CartPage() {
           src="/images/empty-cart.svg"
           alt="Panier vide"
           className="w-64 h-64 mb-6"
+          width={200}
+          height={200}
         />
         <h2 className="text-2xl font-bold mb-2 text-[var(--primary-color)]">Votre panier est vide</h2>
         <p className="text-gray-600 mb-6">Ajoutez des produits pour les retrouver ici.</p>

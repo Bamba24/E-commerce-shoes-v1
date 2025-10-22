@@ -4,7 +4,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import {useRouter} from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FiUser, FiLogOut, FiBell } from 'react-icons/fi';
+import { FiUser, FiLogOut, FiBell} from 'react-icons/fi';
+
+import { FaChartBar } from "react-icons/fa";
+import { BsBoxSeam } from "react-icons/bs";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { HiOutlineClipboardList } from "react-icons/hi";
+
 import { MdDashboard } from 'react-icons/md';
 import type {Produit} from "../types/index";
 import {jwtDecode} from 'jwt-decode';
@@ -156,6 +162,21 @@ export default function HeaderAdmin() {
               <Link href="/profil" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
                 <FiUser /> Profil
               </Link>
+              <Link href="/profil" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                <FaChartBar /> statistiques
+              </Link>
+              <Link href="/dashboard/produits" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                <BsBoxSeam /> Gestion Produits
+              </Link>
+              <Link href="/dashboard/utilisateurs" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                <FiUser /> Gestion Utilisateurs
+              </Link>
+              <Link href="/dashboard/commandes" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                <HiOutlineClipboardList /> Gestions des commandes
+              </Link>
+              <Link href="/dashboard/produits/nouveau" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                <AiOutlinePlusCircle /> Ajouter un produit
+              </Link>
               <Link onClick={()=> logout()}  href="/" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
                 <FiLogOut /> Déconnexion
               </Link>
@@ -185,6 +206,10 @@ export default function HeaderAdmin() {
           <li><Link href="/">Home</Link></li>
           <li><Link href="/produits">Produits</Link></li>
           <li><Link href="/contact">Contact</Link></li>
+          <li><Link href="/dashboard/commandes">Gestion Commandes</Link></li>
+          <li><Link href="/dashboard/produits">Gestions Produits</Link></li>
+          <li><Link href="/dashboard/utiisateurs">Gestions Utilisateur</Link></li>
+          <li><Link href="/dashboard/">Gestions Utilisateur</Link></li>
         </ul>
       </div>
     </header>

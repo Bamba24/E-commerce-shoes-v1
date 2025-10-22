@@ -15,7 +15,7 @@ export default function Dashboard() {
   const pathname = usePathname();
 
   return (
-    <div className='grid grid-cols-1 gap-4 p-6 h-140 w-full'>
+    <div className='hidden flex-col justify-between gap-4 p-6 h-140 lg:flex'>
       <div className='flex gap-4 items-center'>
         <MdDashboard size={30} />
         <h1 className='text-2xl font-bold'>Dashboard</h1>

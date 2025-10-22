@@ -23,7 +23,7 @@ export default function CommandeList() {
   }, []);
 
   return (
-    <div className="w-full col-span-3 gap-4 p-6">
+    <div className="w-full gap-4 p-6 h-[600px] overflow-auto">
       <h2 className="text-2xl font-bold mb-6">Liste des Commandes</h2>
 
       {/* Barre de recherche et tri */}

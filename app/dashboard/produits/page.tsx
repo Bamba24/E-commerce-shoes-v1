@@ -54,8 +54,8 @@ export default function ProductList() {
   };
 
   return (
-    <div className="w-full col-span-3 gap-4 p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div className="w-full gap-4 p-6 h-[600px] overflow-auto">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 ">
         <h2 className="text-2xl font-bold">Liste des Produits</h2>
 
         <div className="flex gap-4 w-full md:w-auto">
@@ -83,7 +83,7 @@ export default function ProductList() {
       ) : produits.length === 0 ? (
         <p className="text-gray-500">Aucun produit disponible.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
           {produits.map((product) => (
             <div key={product.id} className="bg-white shadow rounded-lg overflow-hidden">
               <Image
