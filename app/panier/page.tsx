@@ -80,6 +80,7 @@ export default function CartPage() {
             </thead>
             <tbody>
               {panier.map((item) => (
+
                 <tr key={item.id} className="border-b h-20">
                   <td>
                     <button
@@ -91,7 +92,7 @@ export default function CartPage() {
                   </td>
                   <td className="flex items-center gap-2 h-20">
                     <div
-                      style={{ backgroundImage: `url('/${item.images.split(',')[0]}')` }}
+                      style={{ backgroundImage: `url('${item.images}')` }}
                       className="w-12 h-12 rounded-lg bg-cover bg-center bg-no-repeat"
                     ></div>
                     <p>{item.nom}</p>

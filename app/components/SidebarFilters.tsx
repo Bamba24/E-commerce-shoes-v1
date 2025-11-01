@@ -14,7 +14,7 @@ type SidebarFiltersProps = {
   selectedPrice: string;
   setSelectedPrice: (value: string) => void;
   isOpen: boolean;
-  setIsopen: ()=> void;
+  openSidebar: () => void;
 };
 
 export default function SidebarFilters({
@@ -29,7 +29,7 @@ export default function SidebarFilters({
   selectedPrice,
   setSelectedPrice,
   isOpen,
-  openSidebar
+  openSidebar,
 }: SidebarFiltersProps) {
   const categories = ["All", "Hommes", "Femmes", "Enfants"];
   const categoriesShoes = ["Running", "Basketball", "Training", "Football"];
@@ -41,124 +41,156 @@ export default function SidebarFilters({
     "25000 - 30000",
   ];
   const shoesPointures = [36, 37, 38, 39, 40, 41, 42, 43, 44];
-  const colors = ["Noir", "Blanc", "Bleu", "Rouge", "Vert", "Gris", "Violet", "Rose"];
+  const colors = [
+    "Noir",
+    "Blanc",
+    "Bleu",
+    "Rouge",
+    "Vert",
+    "Gris",
+    "Violet",
+    "Rose",
+  ];
 
   return (
-    <div className={`
-         // CLASSES POUR MOBILE (par défaut)
-        fixed inset-y-0 left-0 w-3/4 max-w-xs h-full bg-white p-4 z-50 overflow-y-auto transition-transform duration-300 shadow-2xl
-        
-        // Logique d'ouverture/fermeture (Mobile)
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
-        
-        // ---------------------------------------------------------------------------------------
-        // CLASSES POUR DESKTOP (à partir de md: qui annulent les styles 'fixed' et 'translate'
-        md:sticky top-20 md:translate-x-0 md:h-fit md:w-full md:border md:shadow-none md:block 
-    `}>
+    <>
+      {/* OVERLAY (uniquement sur mobile quand ouvert) */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-20 md:hidden transition-opacity duration-300 ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+        onClick={openSidebar}
+      ></div>
 
-      {/* Genre */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">| Categories</h3>
-        <ul className="grid grid-cols-2 gap-4">
-          {categories.map((category) => (
-            <li key={category}>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="category"
-                  checked={selectedCategory === category}
-                  onChange={() => setSelectedCategory(category)}
-                />
-                <span>{category}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* SIDEBAR */}
+      <aside
+        className={`
+          fixed inset-y-0 left-0 w-3/4 max-w-xs bg-white p-5 overflow-y-auto z-30 
+          transition-transform duration-300 ease-in-out 
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
 
-      {/* Type */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">| Shoes Type</h3>
-        <ul className="grid grid-cols-2 gap-4">
-          {categoriesShoes.map((category) => (
-            <li key={category}>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="shoesCategory"
-                  checked={selectedCategoryShoes === category}
-                  onChange={() => setSelectedCategoryShoes(category)}
-                />
-                <span>{category}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+          md:sticky md:translate-x-0 md:top-20 md:h-fit md:w-full md:border md:shadow-none
+        `}
+      >
+        {/* Titre + bouton fermer (mobile uniquement) */}
+        <div className="flex justify-between items-center mb-6 md:hidden">
+          <h2 className="text-xl font-bold">Filtres</h2>
+          <button
+            onClick={openSidebar}
+            className="text-gray-600 text-lg hover:text-black"
+          >
+            ✕
+          </button>
+        </div>
 
-      {/* Pointures */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">| Shoes Sizes</h3>
-        <ul className="grid grid-cols-3 gap-4">
-          {shoesPointures.map((pointure) => (
-            <li key={pointure}>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="pointure"
-                  checked={selectedPointure === pointure}
-                  onChange={() => setSelectedPointure(pointure)}
-                />
-                <span>{pointure}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+        {/* Catégories */}
+        <div>
+          <h3 className="text-lg font-bold mb-3">| Categories</h3>
+          <ul className="grid grid-cols-2 gap-3">
+            {categories.map((category) => (
+              <li key={category}>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="category"
+                    checked={selectedCategory === category}
+                    onChange={() => setSelectedCategory(category)}
+                  />
+                  <span>{category}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      {/* Couleurs */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">| Colors</h3>
-        <ul className="grid grid-cols-2 gap-4">
-          {colors.map((color) => (
-            <li key={color}>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="color"
-                  checked={selectedColor === color}
-                  onChange={() => setSelectedColor(color)}
-                />
-                <span>{color}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+        {/* Type */}
+        <div className="mt-6">
+          <h3 className="text-lg font-bold mb-3">| Type</h3>
+          <ul className="grid grid-cols-2 gap-3">
+            {categoriesShoes.map((category) => (
+              <li key={category}>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="shoesCategory"
+                    checked={selectedCategoryShoes === category}
+                    onChange={() => setSelectedCategoryShoes(category)}
+                  />
+                  <span>{category}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      {/* Prix */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">| Price Range</h3>
-        <ul className="space-y-2">
-          {prices.map((price) => (
-            <li key={price}>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="price"
-                  checked={selectedPrice === price}
-                  onChange={() => setSelectedPrice(price)}
-                />
-                <span>{price}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+        {/* Pointures */}
+        <div className="mt-6">
+          <h3 className="text-lg font-bold mb-3">| Taille</h3>
+          <ul className="grid grid-cols-3 gap-3">
+            {shoesPointures.map((pointure) => (
+              <li key={pointure}>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="pointure"
+                    checked={selectedPointure === pointure}
+                    onChange={() => setSelectedPointure(pointure)}
+                  />
+                  <span>{pointure}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-    <button onClick={()=> openSidebar()} className="bg-gray-500 text-white text-2xl ">
-      Appliquer et fermer
-    </button>
-    </div>
+        {/* Couleurs */}
+        <div className="mt-6">
+          <h3 className="text-lg font-bold mb-3">| Couleurs</h3>
+          <ul className="grid grid-cols-2 gap-3">
+            {colors.map((color) => (
+              <li key={color}>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="color"
+                    checked={selectedColor === color}
+                    onChange={() => setSelectedColor(color)}
+                  />
+                  <span>{color}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Prix */}
+        <div className="mt-6">
+          <h3 className="text-lg font-bold mb-3">| Prix</h3>
+          <ul className="space-y-2">
+            {prices.map((price) => (
+              <li key={price}>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="price"
+                    checked={selectedPrice === price}
+                    onChange={() => setSelectedPrice(price)}
+                  />
+                  <span>{price}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Bouton fermer (mobile) */}
+        <button
+          onClick={openSidebar}
+          className="mt-8 w-full bg-black text-white py-2 rounded-md md:hidden"
+        >
+          Appliquer et fermer
+        </button>
+      </aside>
+    </>
   );
 }

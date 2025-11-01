@@ -4,7 +4,6 @@ import Products from "./components/products";
 import Category from "./components/category";
 import PopularProducts from "./components/popularProduct";
 import Proportion from "./components/proportion";
-import Testimonials from "./components/testimonials";
 import Faq from "./components/faq";
 import "./globals.css";
 
@@ -25,9 +24,6 @@ export default function Home() {
       </section>
       <section className="py-[var(--padding-section)] px-[var(--padding-x-section)] bg-[var(--primary-color)] text-white">
       <Proportion />
-      </section>
-      <section className="py-[var(--padding-section)] px-[var(--padding-x-section)] bg-[var(--secondary-color)]">
-      <Testimonials />
       </section>
       <section className="py-[var(--padding-section)] px-[var(--padding-x-section)] bg-[var(--secondary-color)]">
       <Faq />

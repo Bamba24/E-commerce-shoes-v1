@@ -1,29 +1,23 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import {useRouter} from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FiUser, FiLogOut, FiBell} from 'react-icons/fi';
-
+import { FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import { FaChartBar } from "react-icons/fa";
 import { BsBoxSeam } from "react-icons/bs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
-
 import { MdDashboard } from 'react-icons/md';
-import type {Produit} from "../types/index";
-import {jwtDecode} from 'jwt-decode';
-import {toast} from 'mui-sonner';
-import type {JwtPayload} from '../types/index'; 
-import { usePathname } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
+import { toast } from 'mui-sonner';
+import type { Produit, JwtPayload } from '../types';
 import { useAuth } from '../context/AuthContext';
 
-
-
 export default function HeaderAdmin() {
-  const {logout} = useAuth()
-  const route = useRouter()
+  const { logout } = useAuth();
+  const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -32,13 +26,13 @@ export default function HeaderAdmin() {
   const [panierCount, setPanierCount] = useState(0);
   const [notificationCount, setNotificationCount] = useState(0);
 
-
-   useEffect(() => {
+  // 🔒 Vérification d’accès
+  useEffect(() => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      toast.error("Connecter vous pour commander");
-      route.push('/');
+      toast.error("Connectez-vous pour accéder à cette page");
+      router.push('/');
       return;
     }
 
@@ -55,41 +49,45 @@ export default function HeaderAdmin() {
 
         if (!res.ok || !data.success) {
           toast.error("Accès refusé");
-          route.push('/');
+          router.push('/');
           return;
         }
 
         const decoded: JwtPayload = jwtDecode(token);
-        const userRole = decoded.role;
-
-        if (pathname === '/dashboard' && userRole !== 'ADMIN') {
+        if (pathname === '/dashboard' && decoded.role !== 'ADMIN') {
           toast.error("Accès réservé aux administrateurs");
-          route.push('/');
+          router.push('/');
         }
 
       } catch (error) {
         console.error('Erreur lors de la vérification du token :', error);
         toast.error('Erreur serveur');
-        route.push('/');
+        router.push('/');
       }
     };
 
     checkAccess();
-  }, [pathname, route]);
+  }, [pathname, router]);
 
-  const pageNotification = () => {
-    window.dispatchEvent(new Event("notificationsUpdated"));
-    route.push('/notifications');
-  }
+  // 🧮 Panier
   const updatePanierCount = () => {
     const count = JSON.parse(localStorage.getItem('panier') || '[]');
     const totalCount = count.reduce((acc: number, item: Produit) => acc + item.quantity, 0);
     setPanierCount(totalCount);
   };
 
+  // 🔔 Notifications (corrigé avec token)
   const fetchNotifications = async () => {
     try {
-      const res = await fetch('/api/notifications');
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const res = await fetch('/api/notifications', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const data = await res.json();
       const nonLues = data.filter((n: { isRead: boolean }) => !n.isRead);
       setNotificationCount(nonLues.length);
@@ -98,22 +96,26 @@ export default function HeaderAdmin() {
     }
   };
 
+  // 🔄 Initialisation et événements
   useEffect(() => {
     updatePanierCount();
     fetchNotifications();
 
     const handlePanierUpdate = () => updatePanierCount();
+    const handleNotificationsUpdate = () => fetchNotifications();
+
     window.addEventListener('panierUpdated', handlePanierUpdate);
-    window.addEventListener('notificationsUpdated', fetchNotifications);
-    
+    window.addEventListener('notificationsUpdated', handleNotificationsUpdate);
+    window.addEventListener('notificationsRead', handleNotificationsUpdate);
+
     return () => {
       window.removeEventListener('panierUpdated', handlePanierUpdate);
-      window.removeEventListener('notificationsUpdated', fetchNotifications);
-    }
-      
+      window.removeEventListener('notificationsUpdated', handleNotificationsUpdate);
+      window.removeEventListener('notificationsRead', handleNotificationsUpdate);
+    };
   }, []);
 
-  // Fermer dropdown si clique en dehors
+  // 🧍‍♂️ Fermer le dropdown si clic à l’extérieur
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -123,6 +125,12 @@ export default function HeaderAdmin() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // 📄 Aller à la page notifications
+  const pageNotification = () => {
+    window.dispatchEvent(new Event("notificationsUpdated"));
+    router.push('/notifications');
+  };
 
   return (
     <header className="flex justify-between items-center py-6 px-[var(--padding-x-section)] bg-[var(--primary-color)] text-white sticky top-0 z-50">
@@ -139,15 +147,15 @@ export default function HeaderAdmin() {
       </nav>
 
       <div className="flex flex-1 gap-x-4 items-center justify-end">
-        {/* 🔔 Notification */}
-        <Link onClick={pageNotification} href="/notifications" className="relative">
+        {/* 🔔 Notifications */}
+        <button onClick={pageNotification} className="relative">
           <FiBell className="text-xl" />
           {notificationCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
               {notificationCount}
             </span>
           )}
-        </Link>
+        </button>
 
         {/* 🧍‍♂️ Dropdown utilisateur */}
         <div className="relative" ref={dropdownRef}>
@@ -162,24 +170,24 @@ export default function HeaderAdmin() {
               <Link href="/profil" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
                 <FiUser /> Profil
               </Link>
-              <Link href="/profil" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
-                <FaChartBar /> statistiques
+              <Link href="/dashboard/stats" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                <FaChartBar /> Statistiques
               </Link>
               <Link href="/dashboard/produits" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
-                <BsBoxSeam /> Gestion Produits
+                <BsBoxSeam /> Produits
               </Link>
               <Link href="/dashboard/utilisateurs" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
-                <FiUser /> Gestion Utilisateurs
+                <FiUser /> Utilisateurs
               </Link>
               <Link href="/dashboard/commandes" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
-                <HiOutlineClipboardList /> Gestions des commandes
+                <HiOutlineClipboardList /> Commandes
               </Link>
               <Link href="/dashboard/produits/nouveau" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
                 <AiOutlinePlusCircle /> Ajouter un produit
               </Link>
-              <Link onClick={()=> logout()}  href="/" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+              <button onClick={() => logout()} className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-gray-100">
                 <FiLogOut /> Déconnexion
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -206,10 +214,9 @@ export default function HeaderAdmin() {
           <li><Link href="/">Home</Link></li>
           <li><Link href="/produits">Produits</Link></li>
           <li><Link href="/contact">Contact</Link></li>
-          <li><Link href="/dashboard/commandes">Gestion Commandes</Link></li>
-          <li><Link href="/dashboard/produits">Gestions Produits</Link></li>
-          <li><Link href="/dashboard/utiisateurs">Gestions Utilisateur</Link></li>
-          <li><Link href="/dashboard/">Gestions Utilisateur</Link></li>
+          <li><Link href="/dashboard/commandes">Commandes</Link></li>
+          <li><Link href="/dashboard/produits">Produits</Link></li>
+          <li><Link href="/dashboard/utilisateurs">Utilisateurs</Link></li>
         </ul>
       </div>
     </header>

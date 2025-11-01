@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { sendOrderConfirmation } from '../../lib/email';
+import { sendOrderConfirmation, sendAdminNotification } from '../../lib/email';
 import type { ProduitCommande } from '@/app/types'; // adapte le chemin
 import type { Produit } from '../../types';
 
@@ -114,6 +114,20 @@ export async function POST(req: NextRequest) {
       produits: produits.map((p: ProduitCommande) => `${p.nom} x ${p.quantity}`).join(', '),
       total: total ?? totalCalcule,
     });
+
+    // ✅ Envoi email à l’administrateur
+    const admin = await prisma.utilisateur.findFirst({
+      where: { role: 'ADMIN' },
+    });
+
+    if (admin) {
+      await sendAdminNotification({
+        to: admin.email,
+        clientName: utilisateurNom,
+        produits: produits.map((p: ProduitCommande) => `${p.nom} x ${p.quantity}`).join(', '),
+        total: total ?? totalCalcule,
+      });
+    }
 
     return NextResponse.json({ success: true, commandeId: commande.id });
   } catch (error) {

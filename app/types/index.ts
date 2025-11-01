@@ -16,6 +16,8 @@ export type Produit = {
   note: number;
   nombreAvis: number;
   quantity: number; // ✅ Optionnel ici (utile pour le panier)
+  imageFile?: FileList; // ✅ Pour l'upload d'image
+  
 };
 
 export type ProduitCommande = {
@@ -27,6 +29,7 @@ export type ProduitCommande = {
 
 
 export type FormValuesAjoutProduit = {
+  id: string;
   nom: string;
   slug: string;
   description: string;
@@ -41,10 +44,7 @@ export type FormValuesAjoutProduit = {
   stock: string;
   note: string;
   nombreAvis: string;
-  image1: string;
-  image2: string;
-  image3: string;
-  image4: string;
+  imageFile: FileList;
 };
 
 

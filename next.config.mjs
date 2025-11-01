@@ -7,6 +7,9 @@ const nextConfig = {
 
 export const config = {
   matcher: ["/profil", "/dashboard/:path*"],
+   images: {
+    domains: ['res.cloudinary.com'],
+  },
 };
 
 export default nextConfig;

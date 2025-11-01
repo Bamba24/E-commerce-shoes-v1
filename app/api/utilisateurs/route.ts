@@ -43,3 +43,23 @@ export async function PUT(req: NextRequest) {
   }
 }
 
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const id = body.id;
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID manquant' }, { status: 400 });
+    }
+
+    const utilisateur = await prisma.utilisateur.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true, utilisateur });
+  } catch (error) { 
+    console.error('Erreur suppression utilisateur :', error);
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+  
+  }
+}

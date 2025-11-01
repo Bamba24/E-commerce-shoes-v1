@@ -35,3 +35,30 @@ export const sendOrderConfirmation = async ({
     `,
   });
 };
+
+
+// ✅ Email d’alerte administrateur
+export const sendAdminNotification = async ({
+  to,
+  clientName,
+  produits,
+  total,
+}: {
+  to: string;
+  clientName: string;
+  produits: string;
+  total: number;
+}) => {
+  await transporter.sendMail({
+    from: `"Boutique Chaussures - Notification" <${process.env.EMAIL_USER}>`,
+    to,
+    subject: '🛒 Nouvelle commande reçue',
+    html: `
+      <h2>Nouvelle commande reçue</h2>
+      <p><strong>Client :</strong> ${clientName}</p>
+      <p><strong>Produits :</strong> ${produits}</p>
+      <p><strong>Total :</strong> ${total} FCFA</p>
+      <p><i>Connectez-vous à votre tableau de bord pour plus de détails.</i></p>
+    `,
+  });
+};

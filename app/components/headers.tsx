@@ -78,8 +78,8 @@ export default function Headers() {
   // Liste des liens de navigation centralisée
   const NavLinks = (
     <>
-      <li><Link href="/">Home</Link></li>
-      <li><Link href="/produits">Products</Link></li>
+      <li><Link href="/">Acceuil</Link></li>
+      <li><Link href="/produits">Produits</Link></li>
       <li><Link href="/contact">Contact</Link></li>
       {role === 'admin' && <li><Link href="/dashboard">Dashboard</Link></li>}
       {role && <li><Link href="/profil">Profil</Link></li>}

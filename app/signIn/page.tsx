@@ -6,9 +6,12 @@ import { toast } from "mui-sonner";
 import { useForm } from 'react-hook-form';
 import {LoginFormValues} from  "../types/index";
 import { loginUser } from '../services/login';
+import {useAuth} from '../context/AuthContext';
 
 
 export default function LoginPage() {
+
+  const {login: authLogin} = useAuth();
 
   const form = useForm<LoginFormValues>({
     defaultValues: {
@@ -24,6 +27,7 @@ export default function LoginPage() {
 
   try {
       const result = await loginUser(data);
+      authLogin(result.user, result.token);
       toast.success(`Connexion réussie, Bienvenue ${result.user.nom}`);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
